@@ -3,7 +3,6 @@ package challange.kobe.io.moviemania
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import challange.kobe.io.moviemania.adapters.MovieArrayAdapter
 import challange.kobe.io.moviemania.api.MDBClient
 import challange.kobe.io.moviemania.models.MovieModel
@@ -156,7 +155,7 @@ class MainActivity : AppCompatActivity() {
         })*/
         movieReciclerView.layoutManager = LinearLayoutManager(this)
 
-        MDBClient.instance().getUpComingMovies()
+        MDBClient.instance().getUpComingMovies(2)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {

@@ -6,8 +6,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import challange.kobe.io.moviemania.R
 import challange.kobe.io.moviemania.models.MovieModel
+import com.squareup.picasso.Picasso
 
 import kotlinx.android.synthetic.main.movie_item_layout.view.*
 
@@ -34,9 +36,17 @@ class MovieArrayAdapter(val mItems: ArrayList<MovieModel>, private val mContext:
         val item = mItems[position]
         holder.mMovieTitle.text = item.title
         holder.mMovieGenre.text = formattedGenreFromList(item.genre_ids)
-        holder.mMovieDate.text =  formattedDateTextFrom(item.release_date)
+        holder.mMovieDate.text = formattedDateTextFrom(item.release_date)
 
-        //holder.mMoviePoster setar com picasso or placeholder
+        setUpMoviePoster(holder.mMoviePoster, item.poster_path)
+    }
+
+    private fun setUpMoviePoster(mMoviePoster: ImageView?, posterPath: String) {
+        Picasso.get()
+            .load("http://image.tmdb.org/t/p/w92/$posterPath")
+            .resize(278, 369)
+            .centerCrop()
+            .into(mMoviePoster)
     }
 
     private fun formattedDateTextFrom(release_date: String): CharSequence? {
