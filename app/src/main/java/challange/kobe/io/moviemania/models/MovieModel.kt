@@ -16,3 +16,16 @@ data class MovieModel(
     var overview: String = "",
     var release_date: String = ""
 )
+
+data class DateRange(
+    var maximum: String,
+    var minimum: String
+)
+
+data class UpCommingMoviesResponse(
+    var results: List<MovieModel>,
+    var page: Int,
+    var total_results: Int,
+    var total_pages: Int,
+    var dates: DateRange
+)

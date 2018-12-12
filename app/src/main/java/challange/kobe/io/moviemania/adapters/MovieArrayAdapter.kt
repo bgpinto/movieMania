@@ -36,7 +36,7 @@ class MovieArrayAdapter(val mItems: ArrayList<MovieModel>, private val mContext:
         holder.mMovieGenre.text = formattedGenreFromList(item.genre_ids)
         holder.mMovieDate.text =  formattedDateTextFrom(item.release_date)
 
-        //holder.mMoviePoster setar com picasso
+        //holder.mMoviePoster setar com picasso or placeholder
     }
 
     private fun formattedDateTextFrom(release_date: String): CharSequence? {

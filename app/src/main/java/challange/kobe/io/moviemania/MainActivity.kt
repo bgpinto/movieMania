@@ -1,11 +1,14 @@
 package challange.kobe.io.moviemania
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import challange.kobe.io.moviemania.adapters.MovieArrayAdapter
+import challange.kobe.io.moviemania.api.MDBClient
 import challange.kobe.io.moviemania.models.MovieModel
-
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 
 /*
@@ -37,6 +40,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpMovieRecyclerView() {
 
+        /*
         mMovieArray.add(MovieModel().apply {
             vote_count = 58
             id = 428078
@@ -149,11 +153,15 @@ class MainActivity : AppCompatActivity() {
             overview =
                     "Set in a world many thousands of years in the future. Earth’s cities now roam the globe on huge wheels, devouring each other in a struggle for ever diminishing resources. On one of these massive Traction Cities, Tom Natsworthy has an unexpected encounter with a mysterious young woman from the Outlands who will change the course of his life forever."
             release_date = "2018-12-06"
-        })
-
-
-
+        })*/
         movieReciclerView.layoutManager = LinearLayoutManager(this)
-        movieReciclerView.adapter = MovieArrayAdapter(mMovieArray, this)
+
+        MDBClient.instance().getUpComingMovies()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                movieReciclerView.adapter = MovieArrayAdapter(ArrayList<MovieModel>(it.results), this)
+            }
+
     }
 }
