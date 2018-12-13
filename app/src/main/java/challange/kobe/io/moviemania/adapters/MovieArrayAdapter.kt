@@ -3,6 +3,7 @@ package challange.kobe.io.moviemania.adapters
 import android.content.Context
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,8 +22,14 @@ class MovieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 }
 
 
-class MovieArrayAdapter(val mItems: ArrayList<MovieModel>, private val mContext: Context) :
+class MovieArrayAdapter(var mItems: ArrayList<MovieModel>, private val mContext: Context) :
     RecyclerView.Adapter<MovieViewHolder>() {
+
+    private val originalList = ArrayList<MovieModel>()
+
+    init {
+        originalList.addAll(mItems)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): MovieViewHolder {
         return MovieViewHolder(LayoutInflater.from(mContext).inflate(R.layout.movie_item_layout, parent, false))
@@ -30,6 +37,19 @@ class MovieArrayAdapter(val mItems: ArrayList<MovieModel>, private val mContext:
 
     override fun getItemCount(): Int {
         return mItems.size
+    }
+
+    fun filter(key: String) {
+        mItems.clear()
+        if (key.isEmpty()) {
+            mItems.addAll(originalList)
+        } else {
+            val newItems = ArrayList(originalList.filter { it.title.contains(key, true) })
+            mItems.addAll(newItems)
+
+        }
+
+        notifyDataSetChanged()
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {

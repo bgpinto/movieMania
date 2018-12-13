@@ -3,6 +3,8 @@ package challange.kobe.io.moviemania
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
+import android.support.v7.widget.SearchView
 import challange.kobe.io.moviemania.adapters.MovieArrayAdapter
 import challange.kobe.io.moviemania.api.MDBClient
 import challange.kobe.io.moviemania.models.MovieModel
@@ -31,10 +33,25 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setUpMovieRecyclerView()
+        setUpSearchViewListener()
     }
 
     private fun setUpSearchViewListener() {
-        TODO("NEED TO SET IN ORDER TO SEARCH OTHERWISE THINGS ARE GONNA BLOW")
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                query?.let {
+                    (movieReciclerView.adapter as MovieArrayAdapter).filter(it)
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let {
+                    (movieReciclerView.adapter as MovieArrayAdapter).filter(it)
+                }
+                return true
+            }
+        })
     }
 
     private fun setUpMovieRecyclerView() {
