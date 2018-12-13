@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import challange.kobe.io.moviemania.R
+import challange.kobe.io.moviemania.models.MovieGenre
 import challange.kobe.io.moviemania.models.MovieModel
 import com.squareup.picasso.Picasso
 
@@ -22,7 +23,11 @@ class MovieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 }
 
 
-class MovieArrayAdapter(var mItems: ArrayList<MovieModel>, private val mContext: Context) :
+class MovieArrayAdapter(
+    var mItems: ArrayList<MovieModel>,
+    private val mContext: Context,
+    private val mGenres: Map<Long, String>
+) :
     RecyclerView.Adapter<MovieViewHolder>() {
 
     private val originalList = ArrayList<MovieModel>()
@@ -75,7 +80,21 @@ class MovieArrayAdapter(var mItems: ArrayList<MovieModel>, private val mContext:
 
     private fun formattedGenreFromList(genre_ids: List<Int>): CharSequence? {
         // perform back-end search and return a list of genres
-        return "Ação"
+
+        var genreList = ""
+
+        genre_ids.take(3)
+            .forEachIndexed { index, it ->
+                if (index <= 1) {
+                    genreList += mGenres[it.toLong()] + " • "
+                } else {
+                    genreList += mGenres[it.toLong()]
+                }
+            }
+
+
+
+        return genreList
     }
 
 }

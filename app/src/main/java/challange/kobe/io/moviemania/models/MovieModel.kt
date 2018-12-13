@@ -29,3 +29,13 @@ data class UpCommingMoviesResponse(
     var total_pages: Int,
     var dates: DateRange
 )
+
+
+data class MovieGenresResponse(
+    var genres: List<MovieGenre>
+)
+
+data class MovieGenre(
+    var id: Long = 0,
+    var name: String
+)

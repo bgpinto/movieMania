@@ -1,5 +1,6 @@
 package challange.kobe.io.moviemania.api
 
+import challange.kobe.io.moviemania.models.MovieGenresResponse
 import challange.kobe.io.moviemania.models.UpCommingMoviesResponse
 import com.google.gson.Gson
 import io.reactivex.Observable
@@ -21,6 +22,12 @@ interface MDBClient {
         @Query("language") language: String = "en-US",
         @Query("api_key") api_key: String = "c5850ed73901b8d268d0898a8a9d8bff"
     ): Observable<UpCommingMoviesResponse>
+
+    @GET("/3/genre/movie/list")
+    fun getMovieGenres(
+        @Query("language") language: String = "en-US",
+        @Query("api_key") api_key: String = "c5850ed73901b8d268d0898a8a9d8bff"
+    ): Observable<MovieGenresResponse>
 
     companion object {
         private val apiClient by lazy {
