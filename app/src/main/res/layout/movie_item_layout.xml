@@ -44,6 +44,7 @@
                 android:textSize="24sp"/>
 
         <TextView
+                android:textColor="#FFFFA0"
                 android:text="Ação"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -66,6 +67,8 @@
                 />
 
         <TextView
+
+                android:textColor="#E18700"
                 android:text="DETALHES"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

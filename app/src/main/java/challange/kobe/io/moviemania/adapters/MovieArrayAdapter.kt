@@ -117,8 +117,6 @@ class MovieArrayAdapter(
     }
 
     private fun formattedGenreFromList(genre_ids: List<Int>): CharSequence? {
-        // perform back-end search and return a list of genres
-
         var genreList = ""
 
         genre_ids.take(3)

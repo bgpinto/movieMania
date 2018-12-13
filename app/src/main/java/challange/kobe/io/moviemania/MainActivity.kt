@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 class MainActivity : AppCompatActivity(), RecyclerViewItemClickListener {
 
     private var mPageCounter = 1
+    private val mGenreMap = HashMap<Long, String>()
 
     private var mScrollListener = object : RecyclerView.OnScrollListener() {
 
@@ -59,16 +60,42 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemClickListener {
 
 
     override fun onClick(view: View, position: Int) {
-        val title = (movieReciclerView.adapter as MovieArrayAdapter).getItemAt(position).title
+        val model = (movieReciclerView.adapter as MovieArrayAdapter).getItemAt(position)
 
-        Log.d("___", " Selected title --- $title")
 
         supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_stage, MovieDetailsFragment())
+            .replace(R.id.fragment_stage, MovieDetailsFragment.newInstance(Bundle().apply {
+                putString("title", model.title)
+                putString("genre", formattedGenreFromList(model.genre_ids))
+                putString("date", formattedDateTextFrom(model.release_date))
+                putString("overview", model.overview)
+                putString("backdrop", model.backdrop_path)
+            }))
             .addToBackStack("MovieDetailsFragment")
             .commit()
 
 
+    }
+
+    private fun formattedDateTextFrom(release_date: String): String {
+        return "Lançamento: ${release_date.split("-").reversed().joinToString("/")}"
+    }
+
+    private fun formattedGenreFromList(genre_ids: List<Int>): String {
+        var genreList = ""
+
+        genre_ids.take(3)
+            .forEachIndexed { index, it ->
+                if (index <= 1) {
+                    genreList += mGenreMap[it.toLong()] + " • "
+                } else {
+                    genreList += mGenreMap[it.toLong()]
+                }
+            }
+
+
+
+        return genreList
     }
 
     private fun setUpSearchViewListener() {
@@ -106,14 +133,12 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemClickListener {
         movieReciclerView.addOnScrollListener(mScrollListener)
 
 
-        var genreMap = HashMap<Long, String>()
-
         MDBClient.instance().getMovieGenres()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 it.genres.forEach { it ->
-                    genreMap[it.id] = it.name
+                    mGenreMap[it.id] = it.name
                 }
             }
 
@@ -121,10 +146,12 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemClickListener {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
-                movieReciclerView.adapter = MovieArrayAdapter(ArrayList(it.results), this, genreMap).apply {
+                movieReciclerView.adapter = MovieArrayAdapter(ArrayList(it.results), this, mGenreMap).apply {
                     setItemClickListener(this@MainActivity)
                 }
             }
 
     }
+
+
 }
