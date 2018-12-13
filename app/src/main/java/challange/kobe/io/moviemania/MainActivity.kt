@@ -6,7 +6,6 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
-import android.util.Log
 import android.view.View
 import challange.kobe.io.moviemania.adapters.MovieArrayAdapter
 import challange.kobe.io.moviemania.adapters.RecyclerViewItemClickListener
@@ -103,7 +102,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemClickListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let {
                     movieReciclerView.removeOnScrollListener(mScrollListener)
-                    (movieReciclerView.adapter as MovieArrayAdapter).filter(it)
+                    (movieReciclerView.adapter as? MovieArrayAdapter)?.filter(it)
                     if (it.isEmpty()) {
                         movieReciclerView.addOnScrollListener(mScrollListener)
                     }
@@ -115,7 +114,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewItemClickListener {
 
                 newText?.let {
                     movieReciclerView.removeOnScrollListener(mScrollListener)
-                    (movieReciclerView.adapter as MovieArrayAdapter).filter(it)
+                    (movieReciclerView.adapter as? MovieArrayAdapter)?.filter(it)
 
                     if (it.isEmpty()) {
                         movieReciclerView.addOnScrollListener(mScrollListener)

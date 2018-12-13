@@ -75,7 +75,6 @@ class MovieArrayAdapter(
     fun getItemAt(position: Int) = mItems[position]
 
     fun filter(key: String) {
-        Log.d("__", "tried key = $key")
         mItems.clear()
         if (key.isEmpty()) {
             mItems.addAll(originalList)
