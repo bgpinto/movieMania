@@ -75,6 +75,7 @@ class MovieArrayAdapter(
     fun getItemAt(position: Int) = mItems[position]
 
     fun filter(key: String) {
+        Log.d("__", "tried key = $key")
         mItems.clear()
         if (key.isEmpty()) {
             mItems.addAll(originalList)
@@ -84,6 +85,13 @@ class MovieArrayAdapter(
 
         }
 
+        notifyDataSetChanged()
+    }
+
+    fun update(items: List<MovieModel>) {
+        originalList.addAll(items)
+        mItems.clear()
+        mItems.addAll(originalList)
         notifyDataSetChanged()
     }
 
