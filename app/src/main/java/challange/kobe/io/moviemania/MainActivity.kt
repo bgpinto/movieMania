@@ -1,40 +1,43 @@
 package challange.kobe.io.moviemania
 
 import android.os.Bundle
-import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
+import android.util.Log
+import android.view.View
 import challange.kobe.io.moviemania.adapters.MovieArrayAdapter
+import challange.kobe.io.moviemania.adapters.RecyclerViewItemClickListener
 import challange.kobe.io.moviemania.api.MDBClient
-import challange.kobe.io.moviemania.models.MovieGenre
-import challange.kobe.io.moviemania.models.MovieModel
+import challange.kobe.io.moviemania.details.MovieDetailsFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 
-/*
-*
-* 1. Pegar upcoming movies:
-*   - https://developers.themoviedb.org/3/movies/get-upcoming
-*
-* 2. Pegar imagens:
-*   - http://image.tmdb.org/t/p/w92/uXJVpPXxZO4L8Rz3IG1Y8XvZJcg.jpg
-*
-*
-* */
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), RecyclerViewItemClickListener {
 
-    private val mMovieArray by lazy {
-        ArrayList<MovieModel>()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setUpMovieRecyclerView()
         setUpSearchViewListener()
+    }
+
+
+    override fun onClick(view: View, position: Int) {
+        val title = (movieReciclerView.adapter as MovieArrayAdapter).getItemAt(position).title
+
+        Log.d("___", " Selected title --- $title")
+
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragment_stage, MovieDetailsFragment())
+            .addToBackStack("MovieDetailsFragment")
+            .commit()
+
+
     }
 
     private fun setUpSearchViewListener() {
@@ -58,6 +61,7 @@ class MainActivity : AppCompatActivity() {
     private fun setUpMovieRecyclerView() {
 
         movieReciclerView.layoutManager = LinearLayoutManager(this)
+        movieReciclerView.itemAnimator = DefaultItemAnimator()
 
         var genreMap = HashMap<Long, String>()
 
@@ -74,7 +78,9 @@ class MainActivity : AppCompatActivity() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
-                movieReciclerView.adapter = MovieArrayAdapter(ArrayList(it.results), this, genreMap)
+                movieReciclerView.adapter = MovieArrayAdapter(ArrayList(it.results), this, genreMap).apply {
+                    setItemClickListener(this@MainActivity)
+                }
             }
 
     }

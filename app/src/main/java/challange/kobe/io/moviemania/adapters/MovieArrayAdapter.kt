@@ -15,34 +15,64 @@ import com.squareup.picasso.Picasso
 
 import kotlinx.android.synthetic.main.movie_item_layout.view.*
 
-class MovieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
+interface RecyclerViewItemClickListener {
+    fun onClick(view: View, position: Int)
+}
+
+class MovieViewHolder(view: View, private val mListener: RecyclerViewItemClickListener) : RecyclerView.ViewHolder(view),
+    View.OnClickListener {
+
+
+    override fun onClick(v: View?) {
+        mListener.onClick(v!!, adapterPosition)
+    }
+
     val mMoviePoster = view.moviewPoster
     val mMovieTitle = view.movieTitle
     val mMovieGenre = view.movieGenre
     val mMovieDate = view.movieDate
+
+    init {
+        view.setOnClickListener(this)
+    }
+
 }
 
 
 class MovieArrayAdapter(
-    var mItems: ArrayList<MovieModel>,
+    private var mItems: ArrayList<MovieModel>,
     private val mContext: Context,
     private val mGenres: Map<Long, String>
 ) :
     RecyclerView.Adapter<MovieViewHolder>() {
 
     private val originalList = ArrayList<MovieModel>()
+    private lateinit var mListener: RecyclerViewItemClickListener
 
     init {
         originalList.addAll(mItems)
     }
 
+
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): MovieViewHolder {
-        return MovieViewHolder(LayoutInflater.from(mContext).inflate(R.layout.movie_item_layout, parent, false))
+        return MovieViewHolder(
+            LayoutInflater.from(mContext).inflate(R.layout.movie_item_layout, parent, false),
+            mListener
+        )
     }
+
 
     override fun getItemCount(): Int {
         return mItems.size
     }
+
+    fun setItemClickListener(listener: RecyclerViewItemClickListener) {
+        mListener = listener
+
+    }
+
+    fun getItemAt(position: Int) = mItems[position]
 
     fun filter(key: String) {
         mItems.clear()
